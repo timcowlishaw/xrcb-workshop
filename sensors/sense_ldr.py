@@ -3,7 +3,11 @@
 
 import time
 import RPi.GPIO as GPIO
-import pythonosc as OSC
+from pythonosc import osc_message_builder, udp_client
+
+LDR_PIN=2
+
+GPIO.setmode(GPIO.BCM)
 
 def rc_time(pin_to_circuit):
     count = 0
@@ -21,12 +25,11 @@ def rc_time(pin_to_circuit):
 
 if __name__ == "__main__":
     try:
-        client = OSC.udp_client.SimpleUDPClient("127.0.0.1", 4559)
+        client = udp_client.SimpleUDPClient("127.0.0.1", 4559)
         while True:
-            val = rc_time(pin_to_circuiot)
-            msg = OSC.osc_message_builder.OscMessageBuilder(address="/xrcb/ldr")
-            msg.add_arg(val)
-            client.send(msg.build())
+            val = rc_time(LDR_PIN)
+            print(val)
+            client.send_message("/xrcb/ldr", val)
     except KeyboardInterrupt:
         pass
     finally:

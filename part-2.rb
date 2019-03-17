@@ -12,7 +12,7 @@ def part2(sensor)
   sleep (rand * 0.5)
 end
 
-def scale(x)
+def scale_sensor_values(x)
   p "In scale"
   y  = ((x/150.0)*100).to_i
   p "Scaled: #{y}"
@@ -25,7 +25,7 @@ with_fx :reverb, mix: 0.5 do
     loop do
       sensor,_ = get "/osc/xrcb/ldr"
       p "Sensor: #{sensor}"
-      scaled = scale(sensor)
+      scaled = scale_sensor_values(sensor)
       p "Scaled: #{scaled}"
       part2(scaled)
     end

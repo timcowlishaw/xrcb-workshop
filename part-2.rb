@@ -5,19 +5,29 @@ def part2(sensor)
        amp: rand * 0.5,
        divisor: 6,
        depth: 0.5,
-       cutoff: sensor
+       sustain: 0,
+       attack: 0,
+       cutoff: sensor,
       )
-  sleep rand * 0.2
+  sleep (rand * 0.5)
 end
 
+def scale(x)
+  p "In scale"
+  y  = ((x/150.0)*100).to_i
+  p "Scaled: #{y}"
+  return y
+end
 
-live_loop :part2 do
-  use_real_time
-  use_synth :fm 
-  sensor = sync "/xrcb/ldr"
-  with_fx :reverb, mix: 0.2 do
-    with_fx :echo do
-      part2(sensor)
+use_synth :fm
+with_fx :reverb, mix: 0.5 do
+  with_fx :echo do
+    loop do
+      sensor,_ = get "/osc/xrcb/ldr"
+      p "Sensor: #{sensor}"
+      scaled = scale(sensor)
+      p "Scaled: #{scaled}"
+      part2(scaled)
     end
   end
 end
